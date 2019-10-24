@@ -54,19 +54,11 @@ int chattering1 = 0;                    // 채터링용 변수(1.잠금해제용
 int chattering2 = 0;
 bool pushBtn1 = false;                  // 잠금해제 버튼 푸시 여부
 bool pushBtn2 = false;                  // 수납여부 버튼 푸시 여부
-<<<<<<< HEAD
 unsigned long opTime, opTime_w, crTime; // 케이스 연 시각 변수                     
 bool firstOpen = false;                 // 처음 개봉 여부 변수
 bool firstMoney = false;                // 처음 계좌 정보 입력 여부 변수
 String strMoney = "";                   // 블루투스로 받은 문자열 금액
 bool isOpen = false;                    // 개봉 여부 변수
-=======
-int opTime;                             // 케이스 연 시각 변수                     
-bool opTimeSet = false;
-bool firstOpen = false;
-bool firstMoney = false;
-String strMoney = "";
->>>>>>> 6660bd7fa3fd47131a7fa3e81422fcd4151f9541
 
 void setup() {
   Serial.begin(boardrate);        // 시리얼 통신 속도 9600 설정
@@ -76,9 +68,9 @@ void setup() {
   pinMode(opbtn_pin, INPUT);      // 잠금장치 스위치 버튼 핀 설정
   pinMode(clbtn_pin, INPUT);      // 카드 수납 여부 스위치 버튼 핀 설정
   pinMode(spk_pin, OUTPUT);       // 수동부저 핀 설정
-  angle = 60;
+  angle = 0;
   servo.write(angle);
-  Serial.println("44");
+  Serial.println("000");
   
 // DS1302 초기 설정 : 처음 업로드 후 주석 처리 후 재업로드 ----------------
 
@@ -94,13 +86,13 @@ void setup() {
 }
 
 void loop() {
-  
+
   if (firstOpen == false && bluetooth.available() > 0) {        // 처음 블루투스로 핸드폰을 통해 케이스 개봉
     delay(50);
-<<<<<<< HEAD
     
-    angle = 10;
+    angle = 90;
     servo.write(angle);
+    Serial.print("111");
     
     isOpen = true;
     
@@ -130,38 +122,9 @@ void loop() {
     firstMoney = true;
     writeMoney = true;
   }
-  
 
-=======
-    angle = 10;
-    servo.write(angle);
-    while (bluetooth.available() > 0)
-      bluetooth.read();
-    firstOpen = true;
-    Serial.println("11");           // 테스트 코드
+  Serial.println(digitalRead(clbtn_pin));
 
-    strTime = rtc.getTimeStr();
-    opTime = strTime.substring(6, 8).toInt();
-    Serial.println(opTime);
-    opTimeSet = true;
-  }
-  else if (firstMoney == false && bluetooth.available() > 0) {  // 처음 사용가능 금액 입력
-    delay(50);
-    while (bluetooth.available() > 0) {      
-      char fMoney = bluetooth.read();
-      strMoney += fMoney;
-    }
-    strMoney.trim();               // 공백 문자 제거
-    money = strMoney.toInt();      // String 문자열을 long 타입의 범위에서 정수로 변환
-    lcd.setCursor(0,1);             // 사용가능 금액 LCD로 출력 전 2번째 줄 초기화
-    lcd.print("                ");
-    firstMoney = true;
-    Serial.println("tt");           // 테스트 코드
-    opTimeSet = false;
-  }
-  
-
->>>>>>> 6660bd7fa3fd47131a7fa3e81422fcd4151f9541
 // 잠금장치 해제 버튼 클릭 시 pushbtn1 = true 값 출력, 잠금 해제 기능, chattering 구현
   if (firstOpen == true && digitalRead(opbtn_pin) == 1 && pushBtn1 == false)
     chattering1++;
@@ -175,17 +138,14 @@ void loop() {
   else
     pushBtn1 = false;
 
-<<<<<<< HEAD
   if (pushBtn1 == true && money > 0) {                   // 사용한도 금액이 0보다 클 경우 모터를 조정해 케이스를 열어줌
-    angle = 10;
+    angle = 90;
     servo.write(angle);
       
     writeMoney = false;
 
     opTime = millis();
     opTime_w = millis();
-
-    Serial.println(opTime);          // 테스트
   }
 
   crTime = millis();                         // 현재 시각
@@ -193,30 +153,6 @@ void loop() {
 
 // 열려있거나 지출내역 혹은 처음 사용가능 금액을 적지 않은 경고음이 10초마다 울림
   if ((isOpen == true || writeMoney == false || firstMoney == false) && t >= 10000 && firstOpen == true) {   
-=======
-  if (pushBtn1 == true && opTimeSet == false) {
-    if (money > 0) {                // 사용한도 금액이 0보다 클 경우 모터를 조정해 케이스를 열어줌
-      angle = 10;
-      servo.write(angle);
-      writeMoney = false;
-      Serial.println("22");
-      if (!opTimeSet) {
-        strTime = rtc.getTimeStr();
-        opTime = strTime.substring(6, 8).toInt();
-        Serial.println(opTime);
-        opTimeSet = true;
-      }
-    }    
-  }
- 
-  strTime = rtc.getTimeStr();
-  int t = strTime.substring(6, 8).toInt()-opTime;
-    
-  if (t<0)
-    t += 60;    
-  
-  if (opTimeSet == true && writeMoney == false && t > 10) {   // 지출금액을 작성하지 않으면 경고음이 10초마다 울림
->>>>>>> 6660bd7fa3fd47131a7fa3e81422fcd4151f9541
     tone(spk_pin, 500);
     delay(1000);
     noTone(spk_pin);      // ???
@@ -232,46 +168,18 @@ void loop() {
   if (chattering2 > 10) {
     pushBtn2 = true;
     chattering2 = 0;
-<<<<<<< HEAD
-=======
-    Serial.println("push button");    // 테스트 코드
->>>>>>> 6660bd7fa3fd47131a7fa3e81422fcd4151f9541
   }
   else
     pushBtn2 = false;
 
-<<<<<<< HEAD
   if (pushBtn2 == true && crTime-opTime >= 5000) {
-    angle = 60;
+    angle = 0;
     servo.write(angle);
     
     lcd.setCursor(0,1);               // LCD 2째줄 초기화
     lcd.print("                ");
 
     isOpen = false;
-=======
-  if (pushBtn2 == true) {
-    angle = 60;
-    servo.write(angle);
-    Serial.println("33");             // 테스트 코드
-    lcd.setCursor(0,1);
-    lcd.print("                ");
-  }
-
-  if (writeMoney == false && bluetooth.available() > 0) {
-    delay(50);
-    strMoney = "";
-    while (bluetooth.available()) {
-      char rMoney = bluetooth.read();
-      strMoney += rMoney;
-    }
-    strMoney.trim();
-    money = strMoney.toInt();
-    lcd.setCursor(0,1);
-    lcd.print("                ");
-    writeMoney = true;
-    opTimeSet = false;
->>>>>>> 6660bd7fa3fd47131a7fa3e81422fcd4151f9541
   }
 
 // 지출 내역 입력
@@ -290,6 +198,19 @@ void loop() {
     lcd.print("                ");
     
     writeMoney = true;
+  }
+
+// 지출 가능 금액이 0원이 되어 케이스가 잠겼을 시 앱을 통해 잔액 설정을 다시 해 열 수 있음
+  if (money == 0 && bluetooth.available()) {
+    delay(50);
+    
+    strMoney = "";
+    while (bluetooth.available() > 0) {
+      char sMoney = bluetooth.read();
+      strMoney += sMoney;
+    }
+    strMoney.trim();
+    money = strMoney.toInt();
   }
 
 // 사용 가능 금액 LCD 출력
