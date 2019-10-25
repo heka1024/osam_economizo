@@ -7,11 +7,9 @@
 개발 키트 : 처음봐, 아두이노 종결 키트(고급편)
 개발 환경 : 윈도우 10 64bit, 안드로이드 스튜디오, 아두이노 1.8.10
 ## 회로도
-
-## 시연 영상
-
-
+![economizo](./economizo.png)
 ### 개발자 연락처
+깃헙 링크 : https://github.com/heka1024/osam_economizo
 육군본부 중앙수사단 병장 박성현, 일병 구경회
 아두이노 소스 관련 연락처 : tjdeorkfl95@naver.com(박성현)
 안드로이드 앱 소스 관련 : heka1024@gmail.com(구경회)
